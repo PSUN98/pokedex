@@ -5,17 +5,28 @@ import React, { Component } from 'react';
 
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      default: true,
-      loading: true,
-      pokemon: null,
-      url: 'https://pokeapi.co/api/v2/',
-      type: 'pokemon',
-      name: '',
-      exist: true
-    };
+  //constructor(props) {
+  //  super(props);
+  //  this.state = {
+  //    default: true,
+  //    loading: true,
+  //    pokemon: null,
+  //    url: 'https://pokeapi.co/api/v2/',
+  //    type: 'pokemon',
+  //    name: '',
+  //    exist: true
+  //  };
+  //}
+
+  state = {
+    default: true,
+    loading: true,
+    pokemon: this.props.pokemon,//rename this to this.props.pokemon
+    url: 'https://pokeapi.co/api/v2/',
+    type: 'pokemon',
+    name: '',
+    exist: true
+
   }
 
 
@@ -104,16 +115,41 @@ class App extends Component {
 
   }
 
+  async handleRandom(event) {
+    let num;
+    num = Math.floor((Math.random() * 898) + 1);//generate random number between 1 to 898
+    //console.log(num.toString());
+    this.setState({
+      default: false,
+      name: num.toString()//convert random number to string
+    });
+    console.log(this.state.name);
+    this.fetchData()
+
+
+  }
+
+  handleBattle = () => {
+    let pokemonData = this.state.pokemon;
+    this.props.onStart(pokemonData);//tranfer data from child to parent
+
+
+  }
+
 
 
 
   render() {
-
+    console.log(this.props)
 
 
     return (
+      //render this.props.children
 
       <div className="App">
+
+        {this.props.children}
+
         <h1>Enter Pokemon</h1>
 
 
@@ -122,7 +158,8 @@ class App extends Component {
             Pokemon:
           <input type="text" onChange={event => this.handleChange(event)} />
           </label>
-          <input type="submit" value="Submit" />
+          <input className="btn btn-sm btn-primary m-2" type="submit" value="Submit" />
+          <button className="btn btn-sm btn-primary m-2" onClick={this.handleRandom.bind(this)}>Random</button>
         </form>
 
 
@@ -148,6 +185,8 @@ class App extends Component {
               </div>
 
         }
+
+        <button className="btn btn-primary m-2" onClick={this.handleBattle.bind(this)}>Enter battle</button>
 
       </div>
     );
